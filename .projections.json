@@ -1,0 +1,33 @@
+{
+  "config/*.exs": {
+    "type": "config"
+  },
+
+  "lib/str.ex": {
+    "type": "app",
+    "dispatch": "mix test test/str_test.exs",
+    "alternate": "test/str_test.exs"
+  },
+
+  "lib/str/*.ex": {
+    "type": "app",
+    "dispatch": "mix test test/str/{}_test.exs",
+    "alternate": "test/str/{}_test.exs"
+  },
+
+  "test/str_test.exs": {
+    "type": "tapp",
+    "dispatch": "mix test {file}",
+    "alternate": "lib/str.ex"
+  },
+
+  "test/str/*_test.exs": {
+    "type": "tapp",
+    "dispatch": "mix test {file}",
+    "alternate": "lib/str/{}.ex"
+  },
+
+  "mix.exs": {
+    "type": "mix"
+  }
+}
