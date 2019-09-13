@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile-test
+    environment:
+      MIX_ENV: test
+    image: gardinte/str-test
