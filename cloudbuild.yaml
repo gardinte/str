@@ -10,21 +10,3 @@ steps:
       mix local.rebar --force && \
       mix deps.get            && \
       mix test
-
-- id: 'Build'
-  name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '.', '-t', '${_IMAGE_NAME}:${SHORT_SHA}', '-t', '${_IMAGE_NAME}:latest']
-
-- id: 'Push'
-  name: 'gcr.io/cloud-builders/docker'
-  args: ['push', '${_IMAGE_NAME}:${SHORT_SHA}']
-
-- id: 'Push as latest'
-  name: 'gcr.io/cloud-builders/docker'
-  args: ['push', '${_IMAGE_NAME}:latest']
-
-tags:
-  - 'gcp-cloud-build-deploy'
-
-substitutions:
-  _IMAGE_NAME: 'gcr.io/k8s-gardinte-development/str'
