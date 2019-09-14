@@ -1,8 +1,15 @@
 steps:
 
 - id: 'Test'
-  name: 'docker/compose:1.25.0-rc2-alpine'
-  args: ['run', '-T', 'app', 'test']
+  name: 'elixir'
+  entrypoint: 'ash'
+  args:
+    - '-c'
+    - |
+      mix local.hex --force   && \
+      mix local.rebar --force && \
+      mix deps.get            && \
+      mix test
 
 - id: 'Build'
   name: 'gcr.io/cloud-builders/docker'
