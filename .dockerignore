@@ -1,9 +1,0 @@
-.dockerignore
-.git
-.gitignore
-_build/
-deps/
-doc/
-Dockerfile-test
-erl_crash.dump
-*.ez
