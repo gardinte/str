@@ -5,7 +5,7 @@ defmodule Str.MixProject do
     [
       app: :str,
       version: "0.1.0",
-      elixir: "~> 1.9",
+      elixir: "~> 1.10",
       start_permanent: Mix.env() == :prod,
       deps: deps()
     ]
@@ -20,8 +20,8 @@ defmodule Str.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:google_api_storage, ">= 0.12.0"},
-      {:goth, ">= 1.1.0"}
+      {:google_api_storage, ">= 0.17.0"},
+      {:goth, ">= 1.2.0"}
     ]
   end
 end
