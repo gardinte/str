@@ -11,14 +11,14 @@ defmodule Str.Upload do
     upload(bucket, %{file: file}, attempt)
   end
 
-  def upload(bucket, %{file: file} = metadata, attempt) do
+  def upload(bucket, %{file: file} = file_data, attempt) do
     wait(attempt)
 
     GoogleStorage.Api.Objects.storage_objects_insert_simple(
       conn(),
       bucket,
       "multipart",
-      metadata(metadata),
+      metadata(file_data),
       file
     )
   end
@@ -45,9 +45,9 @@ defmodule Str.Upload do
     |> handle_upload_response(bucket, file, attempt)
   end
 
-  defp metadata(%{file: file} = data) do
+  defp metadata(%{file: file} = file_data) do
     %{
-      name: file_path(data),
+      name: file_path(file_data),
       contentType: MIME.from_path(file)
     }
   end
