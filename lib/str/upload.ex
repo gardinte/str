@@ -5,14 +5,20 @@ defmodule Str.Upload do
 
   import Str.Connection, only: [conn: 0]
 
-  def upload(bucket, file, attempt \\ 0) do
+  def upload(bucket, file, attempt \\ 0)
+
+  def upload(bucket, file, attempt) when is_binary(file) do
+    upload(bucket, %{file: file}, attempt)
+  end
+
+  def upload(bucket, %{file: file} = metadata, attempt) do
     wait(attempt)
 
     GoogleStorage.Api.Objects.storage_objects_insert_simple(
       conn(),
       bucket,
       "multipart",
-      metadata(file),
+      metadata(metadata),
       file
     )
   end
@@ -39,14 +45,21 @@ defmodule Str.Upload do
     |> handle_upload_response(bucket, file, attempt)
   end
 
-  defp metadata(file) do
+  defp metadata(%{file: file} = data) do
     %{
-      name: file_path(file),
+      name: file_path(data),
       contentType: MIME.from_path(file)
     }
   end
 
-  defp file_path(file) do
+  defp file_path(%{file: file, path: path}) do
+    file_name = Path.basename(file)
+    date = Date.utc_today() |> Date.to_iso8601()
+
+    "#{path}/#{date}/#{file_name}"
+  end
+
+  defp file_path(%{file: file}) do
     file_name = Path.basename(file)
     date = Date.utc_today() |> Date.to_iso8601()
 

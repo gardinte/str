@@ -7,7 +7,17 @@ defmodule StrTest do
     setup [:test_data]
 
     test "upload", %{"bucket" => bucket, "file" => file} do
-      assert {:ok, _object} = Str.upload(bucket, file)
+      date = Date.utc_today() |> Date.to_iso8601()
+
+      assert {:ok, object} = Str.upload(bucket, file)
+      assert "#{date}/file.txt" == object.name
+    end
+
+    test "upload with path", %{"bucket" => bucket, "file" => file} do
+      date = Date.utc_today() |> Date.to_iso8601()
+
+      assert {:ok, object} = Str.upload(bucket, %{file: file, path: "test"})
+      assert "test/#{date}/file.txt" == object.name
     end
   end
 
