@@ -31,13 +31,13 @@ defmodule StrTest do
     test "handle upload :error response", %{"bucket" => bucket, "file" => file} do
       assert capture_log(fn ->
                assert {:ok, %{}} = Str.handle_upload_response({:error, %{}}, bucket, file)
-             end) =~ "Error uploading file #{file} to bucket #{bucket} on attempt 0"
+             end) =~ "Error uploading file #{inspect(file)} to bucket #{bucket} on attempt 0"
     end
 
     test "handle upload :error response on last attempt", %{"bucket" => bucket, "file" => file} do
       assert capture_log(fn ->
                assert {:error, %{}} = Str.handle_upload_response({:error, %{}}, bucket, file, 5)
-             end) =~ "Abort file #{file} upload to bucket #{bucket}"
+             end) =~ "Abort file #{inspect(file)} upload to bucket #{bucket}"
     end
   end
 
