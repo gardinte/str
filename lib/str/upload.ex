@@ -28,14 +28,17 @@ defmodule Str.Upload do
   def handle_upload_response({:ok, _object} = response, _bucket, _file, _attempt), do: response
 
   def handle_upload_response({:error, info} = response, bucket, file, 5) do
-    Logger.error("Abort file #{file} upload to bucket #{bucket}")
+    Logger.error("Abort file #{inspect(file)} upload to bucket #{bucket}")
     Logger.error(inspect(info))
 
     response
   end
 
   def handle_upload_response({:error, info}, bucket, file, attempt) do
-    Logger.error("Error uploading file #{file} to bucket #{bucket} on attempt #{attempt}")
+    Logger.error(
+      "Error uploading file #{inspect(file)} to bucket #{bucket} on attempt #{attempt}"
+    )
+
     Logger.error(inspect(info))
 
     attempt = attempt + 1
@@ -52,18 +55,25 @@ defmodule Str.Upload do
     }
   end
 
-  defp file_path(%{file: file, path: path}) do
+  defp file_path(%{file: file, path: path, date: date}) do
     file_name = Path.basename(file)
-    date = Date.utc_today() |> Date.to_iso8601()
+    date = date |> Date.to_iso8601()
 
-    "#{path}/#{date}/#{file_name}"
+    [path, date, file_name]
+    |> Enum.filter(& &1)
+    |> Enum.join("/")
+  end
+
+  defp file_path(%{file: file, path: path}) do
+    date = Date.utc_today()
+
+    file_path(%{file: file, path: path, date: date})
   end
 
   defp file_path(%{file: file}) do
-    file_name = Path.basename(file)
-    date = Date.utc_today() |> Date.to_iso8601()
+    date = Date.utc_today()
 
-    "#{date}/#{file_name}"
+    file_path(%{file: file, path: nil, date: date})
   end
 
   defp wait(0), do: nil
